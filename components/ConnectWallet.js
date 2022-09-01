@@ -1,10 +1,24 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { connectAccount } from '../features/accountSlice'
 import styled from 'styled-components'
+import { BigNumber, utils } from 'ethers'
 
 const WalletListItem = styled.li.attrs({
     className: 'px-2 py-1 hover:bg-blue-600 cursor-pointer rounded-md',
 })``
+
+export const formatAddress = (address, padding = 4) => {
+    if (address && address.length > 0) {
+        return `${address.substr(0, padding + 2)}…${address.substr(padding * -1)}`
+    } else {
+        return address
+    }
+}
+
+export const formatBalance = (balanceInWei) => {
+    return parseFloat(utils.formatEther(BigNumber.from(balanceInWei))).toFixed(4)
+}
 
 export default function ConnectWallet(props) {
     const dispatch = useDispatch()

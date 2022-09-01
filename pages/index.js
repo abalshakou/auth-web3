@@ -1,10 +1,17 @@
 import Head from 'next/head'
-import { useSelector } from 'react-redux'
-import ConnectWallet, { formatAddress } from "../components/ConnectWallet";
+import { useSelector, useDispatch } from 'react-redux'
+import ConnectWallet, { formatAddress, formatBalance } from "../components/ConnectWallet";
+import { loadConfig } from '../features/configSlice'
+import { useEffect } from 'react'
 
 export default function Home() {
+    const config = useSelector((state) => state.config)
     const account = useSelector(state => state.account)
-    console.log(account)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(loadConfig(null))
+    }, [dispatch, config])
 
   return (
     <div>
@@ -26,7 +33,16 @@ export default function Home() {
         </header>
 
       <main>
+          {account.connected && (
+              <div className="px-10">
+                  <h1 className="text-3xl font-semibold mb-5">Token Balance</h1>
 
+                  <div className="flex flex-col">
+                      <span>{formatBalance(account.balance)} ETH</span>
+                      <span>{formatBalance(account.usdtBalance)} USDT</span>
+                  </div>
+              </div>
+          )}
       </main>
     </div>
   )
